@@ -1,2 +1,2 @@
-# idk-what-im-making
-idk what im making
+# DnD Search
+It searches the DnD database
