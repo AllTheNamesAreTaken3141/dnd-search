@@ -3,6 +3,30 @@ import requests as re
 url_host = "https://www.dnd5eapi.co/api/"
 endpoint = "spells/"
 
+def split_at_comma(txt):
+    split_txt = []
+    current_word = ""
+    for i, item in enumerate(txt):
+        if len(current_word) == 0 and item == " ":
+            continue
+        if item == ",":
+            split_txt.append(current_word)
+            current_word = ""
+        else:
+            current_word += item
+    
+    split_txt.append(current_word)
+    return split_txt
+
+def replace_spaces(txt, char):
+    new_txt = ""
+    for i in txt:
+        if i == " ":
+            new_txt += char
+        else:
+            new_txt += i
+    return new_txt
+
 def display_spell(spell):
   print(spell["name"] + ":")
   print("  Level: " + str(spell["level"]))
@@ -31,8 +55,47 @@ def display_spell(spell):
   except:
     pass
 
+class CmndLine:
+    
+  def __init__(self, host):
+    self.input = ""
+    self.host_url = host
+    self.endpoint = ""
+    self.query = ""
+    self.url = ""
+    self.response = None
+  
+  def get_input(self, txt):
+    self.input = input(txt)
+
+  def display_response(self):
+    if self.response.status_code == 200:
+      if self.input[0] == "spells":
+        display_spell(self.response.json())
+    else:
+      print("Something went wrong.")
+      
+  def search_api(self):
+    self.endpoint = replace_spaces(self.input[1], "-") + "/"
+    self.query = "?name=" + replace_spaces(self.input[2], "+")
+    self.url = self.host_url + self.endpoint + self.query
+    print("Requesting data from " + self.url)
+  
+  def get_api_item(self):
+    self.endpoint = replace_spaces(self.input[0], "-") + "/"
+    self.query = replace_spaces(self.input[1], "-")
+    self.url = self.host_url + self.endpoint + self.query
+    print("Requesting data from " + self.url)
+
+  def parse_input(self):
+    self.input = split_at_comma(self.input)
+    if self.input[0] == "search":
+      self.search_api()
+    else:
+      self.get_api_item()
+
+cmnd_line = CmndLine(url_host)
+
 while True:
-  query = input("Enter a spell index: ")
-  url = url_host + endpoint + query
-  spell = re.get(url)
-  display_spell(spell.json())
+  cmnd_line.get_input(">>")
+  cmnd_line.parse_input()
