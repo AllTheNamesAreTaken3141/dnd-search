@@ -54,6 +54,10 @@ def display_spell(spell):
         print("      " + k + ": " + spell["damage"]["damage_at_slot_level"][k])
   except:
     pass
+  print("\n  School: " + spell["school"]["name"])
+  print("\n  Classes:")
+  for i in spell["classes"]:
+   print("    " + i["name"])
 
 class CmndLine:
     
@@ -85,14 +89,23 @@ class CmndLine:
     self.endpoint = replace_spaces(self.input[0], "-") + "/"
     self.query = replace_spaces(self.input[1], "-")
     self.url = self.host_url + self.endpoint + self.query
-    print("Requesting data from " + self.url)
+    self.response = re.get(self.url)
 
   def parse_input(self):
     self.input = split_at_comma(self.input)
     if self.input[0] == "search":
-      self.search_api()
+      try:
+        self.search_api()
+      except:
+        print("Something went wrong.")
+        return 0
     else:
-      self.get_api_item()
+      try:
+        self.get_api_item()
+      except:
+        print("Something went wrong.")
+        return 0
+    self.display_response()
 
 cmnd_line = CmndLine(url_host)
 
