@@ -59,6 +59,24 @@ def display_spell(spell):
   for i in spell["classes"]:
    print("    " + i["name"])
 
+def display_search(search, query):
+  if (search["count"] == 0):
+    print("No results found for \"" + query + "\"")
+  else:
+    print(str(search["count"]) + " results found for \"" + query + "\":")
+    for i in search["results"]:
+      print("  " + i["name"])
+
+def display_monster(monster):
+  print(monster["name"] + ":")
+  print("  Size: " + monster["size"])
+  print("  Type: " + monster["type"])
+  print("  Alignment: " + monster["alignment"])
+  print("  AC: " + str(monster["armor_class"]))
+  print("  HP: " + str(monster["hit_points"]))
+  print("  Hit Dice: " + monster["hit_dice"])
+
+
 class CmndLine:
     
   def __init__(self, host):
@@ -76,6 +94,10 @@ class CmndLine:
     if self.response.status_code == 200:
       if self.input[0] == "spells":
         display_spell(self.response.json())
+      elif self.input[0] == "search":
+        display_search(self.response.json(), self.input[2])
+      elif self.input[0] == "monsters":
+        display_monster(self.response.json())
     else:
       print("Something went wrong.")
       
@@ -83,7 +105,7 @@ class CmndLine:
     self.endpoint = replace_spaces(self.input[1], "-") + "/"
     self.query = "?name=" + replace_spaces(self.input[2], "+")
     self.url = self.host_url + self.endpoint + self.query
-    print("Requesting data from " + self.url)
+    self.response = re.get(self.url)
   
   def get_api_item(self):
     self.endpoint = replace_spaces(self.input[0], "-") + "/"
