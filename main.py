@@ -70,11 +70,21 @@ def display_search(search, query):
 def display_monster(monster):
   print(monster["name"] + ":")
   print("  Size: " + monster["size"])
-  print("  Type: " + monster["type"])
-  print("  Alignment: " + monster["alignment"])
-  print("  AC: " + str(monster["armor_class"]))
-  print("  HP: " + str(monster["hit_points"]))
-  print("  Hit Dice: " + monster["hit_dice"])
+  print("\n  Type: " + monster["type"])
+  print("\n  Alignment: " + monster["alignment"])
+  print("\n  AC: " + str(monster["armor_class"]))
+  print("\n  HP: " + str(monster["hit_points"]))
+  print("\n  Hit Dice: " + monster["hit_dice"])
+  print("\n  Speed:")
+  for i in monster["speed"]:
+    print("    " + i + ": " + monster["speed"][i])
+  print("\n  Stats:")
+  print("    STR: " + str(monster["strength"]))
+  print("    DEX: " + str(monster["dexterity"]))
+  print("    CON: " + str(monster["constitution"]))
+  print("    WIS: " + str(monster["wisdom"]))
+  print("    INT: " + str(monster["intelligence"]))
+  print("    CHR: " + str(monster["charisma"]))
 
 
 class CmndLine:
